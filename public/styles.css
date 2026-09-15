@@ -1,0 +1,721 @@
+/* Astra — ciel nocturne. Toutes les couleurs sont des variables : la vision nocturne ne change que les variables. */
+:root {
+  color-scheme: dark;
+  --ciel-haut: #02040d;
+  --ciel-bas: #0b1332;
+  --nebuleuse-1: rgba(78, 98, 210, 0.28);
+  --nebuleuse-2: rgba(150, 70, 180, 0.2);
+  --panneau: rgba(12, 18, 42, 0.8);
+  --bord: rgba(150, 172, 255, 0.2);
+  --texte: #eef1ff;
+  --texte-doux: #b4bddf;
+  --surligne: #ffd98a;
+  --accent: #ffd27a;
+  --accent-texte: #1b1400;
+  --bulle-vous: #2b3f8f;
+  --bulle-astra: rgba(255, 255, 255, 0.06);
+  --etoile: #ffffff;
+  --lune-claire: #fff7e3;
+  --lune-foncee: #d8c9a4;
+  --lune-ombre: #182040;
+  --lune-mer: #6d6450;
+  --halo: rgba(255, 234, 186, 0.55);
+  --gene-faible: #8be3b0;
+  --gene-moyenne: #ffd27a;
+  --gene-forte: #ff9b8a;
+  --focus: #ffd27a;
+  --rayon: 1.25rem;
+}
+
+/* Lumière rouge : l'œil garde son adaptation au noir. */
+:root[data-vision="nocturne"] {
+  --ciel-haut: #040000;
+  --ciel-bas: #140202;
+  --nebuleuse-1: rgba(160, 20, 10, 0.18);
+  --nebuleuse-2: rgba(110, 10, 10, 0.16);
+  --panneau: rgba(28, 4, 4, 0.82);
+  --bord: rgba(255, 90, 80, 0.26);
+  --texte: #ff9c94;
+  --texte-doux: #e0645b;
+  --surligne: #ffc2bb;
+  --accent: #c62a22;
+  --accent-texte: #fff1ef;
+  --bulle-vous: #5a0f0c;
+  --bulle-astra: rgba(255, 60, 50, 0.08);
+  --etoile: #ff5a4f;
+  --lune-claire: #ff7a70;
+  --lune-foncee: #a82a22;
+  --lune-ombre: #2a0706;
+  --lune-mer: #5c0f0b;
+  --halo: rgba(255, 60, 50, 0.4);
+  --gene-faible: #ff9c94;
+  --gene-moyenne: #ff9c94;
+  --gene-forte: #ff9c94;
+  --focus: #ff7b72;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Couleur unie la plus claire du ciel : les outils mesurent le contraste dans le pire cas. */
+html {
+  min-height: 100%;
+  background-color: var(--ciel-bas);
+}
+
+/* La voûte décorative : dégradé, deux couches d'étoiles, une étoile filante.
+   pointer-events: none la sort des calculs de position, axe mesure donc le contraste sur la couleur unie. */
+.voute {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 55% at 12% 0%, var(--nebuleuse-1), transparent 70%),
+    radial-gradient(ellipse 60% 50% at 100% 100%, var(--nebuleuse-2), transparent 70%),
+    linear-gradient(180deg, var(--ciel-haut), var(--ciel-bas));
+}
+
+.voute::before,
+.voute::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.voute::before {
+  background-image:
+    radial-gradient(circle at 23px 41px, var(--etoile) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 87px 133px, var(--etoile) 0 0.8px, transparent 1.4px),
+    radial-gradient(circle at 151px 67px, var(--etoile) 0 1.2px, transparent 1.8px),
+    radial-gradient(circle at 211px 197px, var(--etoile) 0 0.8px, transparent 1.4px),
+    radial-gradient(circle at 127px 229px, var(--etoile) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 59px 181px, var(--etoile) 0 0.8px, transparent 1.4px),
+    radial-gradient(circle at 199px 17px, var(--etoile) 0 1px, transparent 1.6px);
+  background-size: 241px 241px;
+  opacity: 0.55;
+}
+
+.voute::after {
+  background-image:
+    radial-gradient(circle at 43px 61px, var(--etoile) 0 1.4px, transparent 2.4px),
+    radial-gradient(circle at 313px 143px, var(--etoile) 0 1px, transparent 2px),
+    radial-gradient(circle at 191px 331px, var(--etoile) 0 1.6px, transparent 2.6px),
+    radial-gradient(circle at 367px 283px, var(--etoile) 0 1px, transparent 2px),
+    radial-gradient(circle at 97px 389px, var(--etoile) 0 1.2px, transparent 2.2px);
+  background-size: 409px 409px;
+  animation: scintiller 4s ease-in-out infinite alternate;
+}
+
+.filante {
+  position: absolute;
+  top: 16vh;
+  left: -12rem;
+  width: 11rem;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--etoile));
+  opacity: 0;
+  animation: filer 12s linear 3s infinite;
+}
+
+@keyframes scintiller {
+  from { opacity: 0.35; }
+  to { opacity: 1; }
+}
+
+@keyframes filer {
+  0% { opacity: 0; transform: rotate(14deg) translateX(0); }
+  1% { opacity: 1; }
+  9% { opacity: 0; transform: rotate(14deg) translateX(130vw); }
+  100% { opacity: 0; transform: rotate(14deg) translateX(130vw); }
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "entete" "ciel" "discussion" "pied";
+  gap: 1rem;
+  padding: 1rem;
+  color: var(--texte);
+  font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", sans-serif;
+  line-height: 1.5;
+}
+
+header {
+  grid-area: entete;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(1.7rem, 1.2rem + 1.6vw, 2.4rem);
+  line-height: 1.1;
+}
+
+h1 .etoile {
+  color: var(--surligne);
+  text-shadow: 0 0 18px var(--halo);
+}
+
+h1 .produit {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0.15rem 0.6rem;
+  vertical-align: middle;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--texte-doux);
+  border: 1px solid var(--bord);
+  border-radius: 999px;
+}
+
+header p {
+  margin: 0.3rem 0 0;
+  font-size: 0.95rem;
+  color: var(--texte-doux);
+}
+
+h2 {
+  margin: 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--texte-doux);
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+#vision {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.5rem 1.05rem;
+  color: var(--texte);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--bord);
+  border-radius: 999px;
+}
+
+#vision::before {
+  content: "";
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background: #e0352b;
+  box-shadow: 0 0 10px 2px rgba(224, 53, 43, 0.7);
+}
+
+#vision[aria-pressed="true"] {
+  background: rgba(198, 42, 34, 0.25);
+  border-color: #ff5a4f;
+}
+
+#ciel,
+.discussion {
+  padding: 1.1rem 1.25rem;
+  background: var(--panneau);
+  border: 1px solid var(--bord);
+  border-radius: var(--rayon);
+  box-shadow: 0 30px 80px -40px rgba(0, 0, 0, 0.9);
+}
+
+/* Panneau du ciel */
+#ciel {
+  --eclat: 0.5;
+  grid-area: ciel;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.ciel-entete {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+}
+
+.ciel-date {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.ciel-date::first-letter {
+  text-transform: uppercase;
+}
+
+/* Sur grand écran, l'espace libre se répartit autour de la Lune et de son cycle. */
+.lune {
+  margin: auto 0 0;
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  text-align: center;
+}
+
+.lune-dessin {
+  width: min(13rem, 21vh, 60vw);
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 0 calc(6px + 28px * var(--eclat)) var(--halo));
+  animation: flotter 9s ease-in-out infinite;
+}
+
+@keyframes flotter {
+  50% { transform: translateY(-4px); }
+}
+
+.lune-ombre {
+  fill: var(--lune-ombre);
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 0.5;
+}
+
+.lune-eclairee {
+  fill: url(#lumiere-lune);
+}
+
+/* Les « mers » lunaires, floutées pour rester discrètes. */
+.lune-mers {
+  fill: var(--lune-mer);
+  opacity: 0.28;
+  filter: blur(1.6px);
+}
+
+.lune figcaption {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.phase {
+  font-size: 1.45rem;
+}
+
+.lune figcaption span {
+  font-size: 0.9rem;
+  color: var(--texte-doux);
+}
+
+.cycle {
+  margin-bottom: auto;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.cycle-piste {
+  position: relative;
+  height: 0.4rem;
+  border: 1px solid var(--bord);
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--lune-ombre), var(--lune-claire) 50%, var(--lune-ombre));
+}
+
+.cycle-curseur {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 50%;
+  background: var(--surligne);
+  box-shadow: 0 0 12px 3px var(--halo);
+  transform: translate(-50%, -50%);
+}
+
+.cycle-reperes {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
+:root[data-vision="nocturne"] .cycle-reperes,
+:root[data-vision="nocturne"] .picto {
+  filter: grayscale(1) sepia(1) saturate(6) hue-rotate(-45deg) brightness(0.75);
+}
+
+.rendez-vous {
+  margin: 0;
+  display: grid;
+}
+
+.rendez-vous div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.1rem 0.75rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--bord);
+}
+
+.rendez-vous dt {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--texte-doux);
+}
+
+.rendez-vous dd {
+  margin: 0;
+  font-weight: 600;
+  text-align: right;
+}
+
+.gene {
+  text-transform: capitalize;
+}
+
+.gene::before {
+  content: "";
+  display: inline-block;
+  width: 0.6rem;
+  height: 0.6rem;
+  margin-right: 0.45rem;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 8px currentColor;
+}
+
+.gene[data-gene="faible"] { color: var(--gene-faible); }
+.gene[data-gene="moyenne"] { color: var(--gene-moyenne); }
+.gene[data-gene="forte"] { color: var(--gene-forte); }
+
+/* Discussion */
+main {
+  grid-area: discussion;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+}
+
+.discussion {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+#messages {
+  min-height: 12rem;
+  max-height: 60vh;
+  margin: 0;
+  padding: 0.25rem 0.4rem 0.25rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  overflow-y: auto;
+  list-style: none;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--bord) transparent;
+}
+
+#messages li {
+  align-self: flex-start;
+  max-width: min(40rem, 90%);
+  padding: 0.55rem 0.95rem 0.7rem;
+  background: var(--bulle-astra);
+  border: 1px solid var(--bord);
+  border-radius: 1.1rem;
+  overflow-wrap: anywhere;
+}
+
+#messages li[data-role="assistant"] {
+  border-bottom-left-radius: 0.35rem;
+}
+
+#messages li[data-role="user"] {
+  align-self: flex-end;
+  background: var(--bulle-vous);
+  border-color: transparent;
+  border-bottom-right-radius: 0.35rem;
+}
+
+#messages li:last-child {
+  animation: apparaitre 0.35s ease-out both;
+}
+
+@keyframes apparaitre {
+  from { opacity: 0; transform: translateY(6px); }
+}
+
+#messages p {
+  margin: 0;
+}
+
+#messages strong {
+  font-weight: 650;
+  color: var(--surligne);
+}
+
+.auteur {
+  display: block;
+  margin-bottom: 0.1rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--texte-doux);
+}
+
+li[data-role="assistant"] .auteur::before {
+  content: "✦ " / "";
+  color: var(--surligne);
+}
+
+li[data-role="user"] .auteur {
+  color: var(--texte);
+}
+
+.en-attente .points {
+  display: inline-flex;
+  gap: 0.3rem;
+  padding: 0.35rem 0 0.1rem;
+}
+
+.en-attente i {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--surligne);
+  animation: sautiller 1s ease-in-out infinite;
+}
+
+.en-attente i:nth-child(2) { animation-delay: 0.15s; }
+.en-attente i:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes sautiller {
+  0%, 80%, 100% { opacity: 0.3; transform: translateY(0); }
+  40% { opacity: 1; transform: translateY(-4px); }
+}
+
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.suggestions button {
+  padding: 0.38rem 0.85rem;
+  font-size: 0.88rem;
+  color: var(--texte);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--bord);
+  border-radius: 999px;
+  transition: border-color 0.2s, background-color 0.2s, transform 0.2s;
+}
+
+.suggestions button:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: var(--surligne);
+  transform: translateY(-1px);
+}
+
+form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "etiquette compteur" "champ bouton";
+  align-items: end;
+  gap: 0.4rem 0.75rem;
+}
+
+label {
+  grid-area: etiquette;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+#compteur {
+  grid-area: compteur;
+  justify-self: end;
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--texte-doux);
+}
+
+textarea {
+  grid-area: champ;
+  width: 100%;
+  min-height: 3.3rem;
+  padding: 0.7rem 0.95rem;
+  font: inherit;
+  color: var(--texte);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--bord);
+  border-radius: 0.95rem;
+  resize: vertical;
+}
+
+textarea::placeholder {
+  color: var(--texte-doux);
+}
+
+button[type="submit"] {
+  grid-area: bouton;
+  min-height: 3.3rem;
+  padding: 0.7rem 1.5rem;
+  font-weight: 700;
+  color: var(--accent-texte);
+  background: var(--accent);
+  border: 0;
+  border-radius: 0.95rem;
+  box-shadow: 0 0 28px -8px var(--accent);
+  transition: transform 0.15s, box-shadow 0.2s;
+}
+
+button[type="submit"]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 34px -6px var(--accent);
+}
+
+button[type="submit"]:disabled {
+  cursor: progress;
+  opacity: 0.6;
+  transform: none;
+  box-shadow: none;
+}
+
+.barre {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+}
+
+#status {
+  flex: 1 1 14rem;
+  min-height: 1.5em;
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--surligne);
+}
+
+.outils {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.outils button {
+  padding: 0.4rem 0.85rem;
+  font-size: 0.85rem;
+  color: var(--texte-doux);
+  background: transparent;
+  border: 1px solid var(--bord);
+  border-radius: 0.7rem;
+}
+
+.outils button:hover {
+  color: var(--texte);
+  border-color: var(--texte-doux);
+}
+
+footer {
+  grid-area: pied;
+  font-size: 0.8rem;
+  text-align: center;
+  color: var(--texte-doux);
+}
+
+footer p {
+  margin: 0;
+}
+
+/* Grand écran : le ciel à gauche, la discussion à droite, tout tient dans la fenêtre. */
+@media (min-width: 60rem) {
+  body {
+    max-width: 88rem;
+    margin: 0 auto;
+    padding: 1.25rem 1.75rem 1rem;
+    gap: 1rem 1.25rem;
+    grid-template-columns: minmax(17rem, 21rem) minmax(0, 1fr);
+    grid-template-areas: "entete entete" "ciel discussion" "pied pied";
+  }
+}
+
+@media (min-width: 60rem) and (min-height: 36rem) {
+  body {
+    height: 100vh;
+    min-height: 0;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+
+  #ciel {
+    overflow-y: auto;
+  }
+
+  #messages {
+    flex: 1;
+    max-height: none;
+  }
+}
+
+/* Écran large mais peu haut (vidéoprojecteur) : la Lune passe à côté de son nom. */
+@media (min-width: 60rem) and (max-height: 42rem) {
+  .lune {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    justify-items: start;
+    column-gap: 1rem;
+    text-align: left;
+  }
+
+  .lune-dessin {
+    width: 6.5rem;
+  }
+
+  .phase {
+    font-size: 1.2rem;
+  }
+}
+
+/* Téléphone : le compteur passe à côté du bouton. */
+@media (max-width: 30rem) {
+  form {
+    grid-template-areas: "etiquette etiquette" "champ champ" "bouton compteur";
+  }
+
+  button[type="submit"] {
+    justify-self: start;
+    min-height: 2.8rem;
+  }
+
+  #compteur {
+    align-self: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
