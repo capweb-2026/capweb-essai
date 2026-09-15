@@ -59,9 +59,10 @@ function charger() {
   }
 }
 
+// Contrat CP1 : #messages ne contient que les échanges réels. L'accueil s'affiche hors de la conversation.
 function accueillir() {
   if (historique.length === 0) {
-    historique.push({ role: 'assistant', text: ACCUEIL });
+    statut.textContent = ACCUEIL.replaceAll('**', '');
   }
 }
 
@@ -107,7 +108,8 @@ formulaire.addEventListener('submit', (event) => {
   const reponse = replyTo(controle.value, { maintenant: maintenant(), nombreMessages: historique.length });
   historique.push({ role: 'user', text: controle.value });
   attendre(true);
-  renderMessages(historique, liste, { enAttente: true });
+  // Contrat CP1 : l'attente s'affiche dans le statut, pas comme une ligne de conversation.
+  renderMessages(historique, liste);
   minuteur = setTimeout(() => {
     minuteur = null;
     historique.push({ role: 'assistant', text: reponse });

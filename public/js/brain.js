@@ -4,28 +4,28 @@ import { resumeCiel, prochainesEclipses, dateEnClair, delaiEnClair, pourcentage 
 const LONGUEUR_MAX = 280;
 
 // Premier message affiché quand le journal est vide.
-export const ACCUEIL = 'Bonsoir ! Je suis **Astra**, votre guide du ciel nocturne. Tapez **/ciel** pour la nuit qui vient, ou choisissez une question ci-dessous.';
+export const ACCUEIL = 'Bonsoir ! Je suis Astra, votre guide du ciel nocturne. Tapez /ciel pour la nuit qui vient, ou choisissez une question ci-dessous.';
 
 const TEXTES = {
-  salutation: 'Bonsoir à vous ! Le ciel est prêt : demandez-moi la **Lune**, les **étoiles filantes** ou l’**étoile Polaire**.',
-  aide: 'Je connais la **Lune**, les **étoiles filantes**, l’**étoile Polaire**, la **Voie lactée**, les **éclipses**, les **planètes**, l’**ISS** et les **jumelles**. Posez une question, ou tapez **/aide** pour les commandes.',
-  commandes: 'Commandes : **/ciel** la nuit qui vient · **/lune** la phase du jour · **/compte** la taille du journal · **/effacer** repartir de zéro.',
+  salutation: 'Bonsoir à vous ! Le ciel est prêt : demandez-moi la Lune, les étoiles filantes ou l’étoile Polaire.',
+  aide: 'Je connais la Lune, les étoiles filantes, l’étoile Polaire, la Voie lactée, les éclipses, les planètes, l’ISS et les jumelles. Posez une question, ou tapez /aide pour les commandes.',
+  commandes: 'Commandes : /ciel la nuit qui vient · /lune la phase du jour · /compte la taille du journal · /effacer repartir de zéro.',
   test: 'Test bien reçu : mes règles répondent, le ciel est en place.',
-  repli: 'Ce coin du ciel m’est encore inconnu. Essayez **Lune**, **étoiles filantes**, **Polaire**, **Voie lactée**, ou **/aide**.',
-  inconnue: 'Commande inconnue. Tapez **/aide** pour voir les commandes.',
+  repli: 'Ce coin du ciel m’est encore inconnu. Essayez Lune, étoiles filantes, Polaire, Voie lactée, ou /aide.',
+  inconnue: 'Commande inconnue. Tapez /aide pour voir les commandes.',
   effacee: 'Conversation effacée.',
-  polaire: 'Cherchez la **Grande Ourse**, cette grande casserole. Prolongez environ **5 fois** le bord de la casserole opposé au manche : vous arrivez sur l’**étoile Polaire**, qui indique le **nord**. Elle n’est pas la plus brillante du ciel : ce titre revient à **Sirius**.',
-  materiel: 'Commencez par des **jumelles** 7×50 ou 10×50 : cratères de la Lune, lunes de **Jupiter**, galaxie d’**Andromède**. Le télescope viendra après. Et une lampe **rouge**, pour garder vos yeux habitués au noir.',
-  iss: 'L’**ISS** fait le tour de la Terre en **90 minutes** environ. Cherchez un point très brillant qui traverse le ciel en quelques minutes **sans clignoter** : un avion, lui, clignote.',
-  planetes: 'Avec de simples **jumelles**, **Jupiter** montre ses quatre plus grandes lunes, découvertes par **Galilée** en **1610**. Les anneaux de **Saturne** demandent un petit télescope. Astuce : une planète **scintille beaucoup moins** qu’une étoile.',
-  pollution: 'Sous un ciel vraiment noir, l’œil voit **plusieurs milliers** d’étoiles ; en centre-ville, quelques dizaines. Plus d’**un humain sur trois** ne voit plus la Voie lactée depuis chez lui (Science Advances, 2016).',
-  scintillement: 'Une étoile **scintille** parce que sa lumière traverse une atmosphère agitée. Une planète, minuscule disque plutôt que simple point, scintille beaucoup moins : c’est la meilleure façon de la reconnaître.'
+  polaire: 'Cherchez la Grande Ourse, cette grande casserole. Prolongez environ 5 fois le bord de la casserole opposé au manche : vous arrivez sur l’étoile Polaire, qui indique le nord. Elle n’est pas la plus brillante du ciel : ce titre revient à Sirius.',
+  materiel: 'Commencez par des jumelles 7×50 ou 10×50 : cratères de la Lune, lunes de Jupiter, galaxie d’Andromède. Le télescope viendra après. Et une lampe rouge, pour garder vos yeux habitués au noir.',
+  iss: 'L’ISS fait le tour de la Terre en 90 minutes environ. Cherchez un point très brillant qui traverse le ciel en quelques minutes sans clignoter : un avion, lui, clignote.',
+  planetes: 'Avec de simples jumelles, Jupiter montre ses quatre plus grandes lunes, découvertes par Galilée en 1610. Les anneaux de Saturne demandent un petit télescope. Astuce : une planète scintille beaucoup moins qu’une étoile.',
+  pollution: 'Sous un ciel vraiment noir, l’œil voit plusieurs milliers d’étoiles ; en centre-ville, quelques dizaines. Plus d’un humain sur trois ne voit plus la Voie lactée depuis chez lui (Science Advances, 2016).',
+  scintillement: 'Une étoile scintille parce que sa lumière traverse une atmosphère agitée. Une planète, minuscule disque plutôt que simple point, scintille beaucoup moins : c’est la meilleure façon de la reconnaître.'
 };
 
 const OBJECTIFS = {
-  faible: 'la **Voie lactée**, loin des lumières',
-  moyenne: 'les cratères de la **Lune**, aux jumelles',
-  forte: 'la **Lune** elle-même, puis les étoiles brillantes'
+  faible: 'la Voie lactée, loin des lumières',
+  moyenne: 'les cratères de la Lune, aux jumelles',
+  forte: 'la Lune elle-même, puis les étoiles brillantes'
 };
 
 export function validateMessage(raw) {
@@ -61,7 +61,7 @@ function contientUn(texte, mots) {
 function reponseLune(maintenant) {
   const { lune, pleineLune, joursAvantPleineLune } = resumeCiel(maintenant);
   let conseil = 'Le long de la limite entre ombre et lumière, les cratères ressortent en relief : sortez les jumelles.';
-  let suite = ` Prochaine pleine Lune : **${dateEnClair(pleineLune)}** (${delaiEnClair(joursAvantPleineLune)}).`;
+  let suite = ` Prochaine pleine Lune : ${dateEnClair(pleineLune)} (${delaiEnClair(joursAvantPleineLune)}).`;
   if (lune.nom === 'Pleine Lune') {
     conseil = 'Belle mais plate : sans ombres, les cratères disparaissent.';
     suite = '';
@@ -69,23 +69,23 @@ function reponseLune(maintenant) {
   if (lune.nom === 'Nouvelle Lune') {
     conseil = 'Nuit sans Lune : parfaite pour la Voie lactée.';
   }
-  return `Ce soir : **${lune.nom}**, éclairée à **${pourcentage(lune.eclairage)}**.${suite} ${conseil}`;
+  return `Ce soir : ${lune.nom}, éclairée à ${pourcentage(lune.eclairage)}.${suite} ${conseil}`;
 }
 
 function reponseVoieLactee(maintenant) {
   const { lune, gene } = resumeCiel(maintenant);
   const eclat = pourcentage(lune.eclairage);
   const avis = {
-    faible: `Bonne nouvelle : la Lune n’est éclairée qu’à **${eclat}**, elle gêne peu.`,
-    moyenne: `La Lune est éclairée à **${eclat}** : la Voie lactée restera pâle tant qu’elle est levée.`,
-    forte: `Mauvaise nouvelle : la Lune, éclairée à **${eclat}**, noie la Voie lactée. Visez plutôt la prochaine nouvelle Lune.`
+    faible: `Bonne nouvelle : la Lune n’est éclairée qu’à ${eclat}, elle gêne peu.`,
+    moyenne: `La Lune est éclairée à ${eclat} : la Voie lactée restera pâle tant qu’elle est levée.`,
+    forte: `Mauvaise nouvelle : la Lune, éclairée à ${eclat}, noie la Voie lactée. Visez plutôt la prochaine nouvelle Lune.`
   }[gene];
-  return `${avis} Pour la **Voie lactée** : loin des villes, sans écran, et une **vingtaine de minutes** pour que vos yeux s’habituent au noir.`;
+  return `${avis} Pour la Voie lactée : loin des villes, sans écran, et une vingtaine de minutes pour que vos yeux s’habituent au noir.`;
 }
 
 function reponseFilantes(maintenant) {
   const { filantes } = resumeCiel(maintenant);
-  return `Prochaine pluie d’étoiles filantes : les **${filantes.nom}**, vers le **${dateEnClair(filantes.date)}** (${delaiEnClair(filantes.jours)}), ${filantes.note}. Pas besoin de télescope : allongez-vous loin des lumières et regardez large.`;
+  return `Prochaine pluie d’étoiles filantes : les ${filantes.nom}, vers le ${dateEnClair(filantes.date)} (${delaiEnClair(filantes.jours)}), ${filantes.note}. Pas besoin de télescope : allongez-vous loin des lumières et regardez large.`;
 }
 
 function reponseEclipses(maintenant) {
@@ -94,13 +94,13 @@ function reponseEclipses(maintenant) {
     return 'Mon calendrier d’éclipses s’arrête en 2027 : il est temps de le mettre à jour.';
   }
   const titre = eclipses.length === 1 ? 'Prochaine éclipse visible' : 'Prochaines éclipses visibles';
-  const liste = eclipses.map((eclipse) => `**${dateEnClair(eclipse.date, 'annee')}**, ${eclipse.texte}`).join(' ; puis ');
+  const liste = eclipses.map((eclipse) => `${dateEnClair(eclipse.date, 'annee')}, ${eclipse.texte}`).join(' ; puis ');
   return `${titre} depuis la France : ${liste}. Pour le Soleil, jamais sans lunettes d’éclipse.`;
 }
 
 function reponseCiel(maintenant) {
   const { lune, gene, filantes } = resumeCiel(maintenant);
-  return `Nuit du **${dateEnClair(maintenant, 'complet')}** : **${lune.nom}**, Lune éclairée à **${pourcentage(lune.eclairage)}**, gêne **${gene}**. Prochain rendez-vous : les **${filantes.nom}**, ${delaiEnClair(filantes.jours)}. Objectif du soir : ${OBJECTIFS[gene]}.`;
+  return `Nuit du ${dateEnClair(maintenant, 'complet')} : ${lune.nom}, Lune éclairée à ${pourcentage(lune.eclairage)}, gêne ${gene}. Prochain rendez-vous : les ${filantes.nom}, ${delaiEnClair(filantes.jours)}. Objectif du soir : ${OBJECTIFS[gene]}.`;
 }
 
 function reponseCompte(nombre) {
@@ -108,7 +108,7 @@ function reponseCompte(nombre) {
     return 'Notre journal est encore vide.';
   }
   const messages = nombre === 1 ? '1 message' : `${nombre} messages`;
-  return `Notre journal contient **${messages}** avant cette commande.`;
+  return `Notre journal contient ${messages} avant cette commande.`;
 }
 
 // Du plus précis au plus général : « éclipse de Lune » parle d’éclipse, « lunes de Jupiter » de planètes.
