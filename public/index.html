@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Astra — guide du ciel nocturne · Cap Web</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E✦%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="voute" aria-hidden="true"><span class="filante"></span></div>
+  <header>
+    <div class="marque">
+      <h1><span class="etoile" aria-hidden="true">✦</span> Astra <span class="produit">Cap Web</span></h1>
+      <p>Votre guide du ciel nocturne. Assistant à règles : aucune IA, tout est calculé dans votre navigateur.</p>
+    </div>
+    <button type="button" id="vision" aria-pressed="false">Vision nocturne</button>
+  </header>
+
+  <aside id="ciel" aria-labelledby="titre-ciel">
+    <div class="ciel-entete">
+      <h2 id="titre-ciel">Ciel de ce soir</h2>
+      <p class="ciel-date" data-ciel="date">…</p>
+    </div>
+    <figure class="lune">
+      <svg class="lune-dessin" viewBox="0 0 100 100" aria-hidden="true">
+        <defs>
+          <radialGradient id="lumiere-lune" cx="42%" cy="38%" r="65%">
+            <stop offset="0%" style="stop-color: var(--lune-claire)"/>
+            <stop offset="100%" style="stop-color: var(--lune-foncee)"/>
+          </radialGradient>
+          <clipPath id="partie-eclairee"><use href="#lune-eclairee"/></clipPath>
+        </defs>
+        <circle class="lune-ombre" cx="50" cy="50" r="45"/>
+        <path id="lune-eclairee" class="lune-eclairee" data-ciel="lune" d="M 50 5 Z"/>
+        <g class="lune-mers" clip-path="url(#partie-eclairee)">
+          <ellipse cx="25" cy="50" rx="11" ry="15"/>
+          <circle cx="37" cy="31" r="10"/>
+          <circle cx="55" cy="34" r="7"/>
+          <circle cx="63" cy="49" r="8"/>
+          <circle cx="78" cy="39" r="5"/>
+          <circle cx="70" cy="61" r="5"/>
+          <circle cx="42" cy="66" r="7"/>
+        </g>
+      </svg>
+      <figcaption>
+        <strong class="phase" data-ciel="phase">…</strong>
+        <span data-ciel="eclairage">…</span>
+      </figcaption>
+    </figure>
+    <div class="cycle" aria-hidden="true">
+      <div class="cycle-piste"><span class="cycle-curseur" data-ciel="curseur"></span></div>
+      <div class="cycle-reperes"><span>🌑</span><span>🌓</span><span>🌕</span><span>🌗</span><span>🌑</span></div>
+    </div>
+    <dl class="rendez-vous">
+      <div><dt>Pleine Lune</dt><dd data-ciel="pleine">…</dd></div>
+      <div><dt>Étoiles filantes</dt><dd data-ciel="filantes">…</dd></div>
+      <div><dt>Gêne de la Lune</dt><dd class="gene" data-ciel="gene">…</dd></div>
+    </dl>
+  </aside>
+
+  <main>
+    <section class="discussion" aria-labelledby="titre-chat">
+      <h2 id="titre-chat">Discussion</h2>
+      <ul id="messages" aria-live="polite" aria-label="Messages" tabindex="0"></ul>
+      <div class="suggestions" role="group" aria-label="Questions rapides">
+        <button type="button" data-question="/ciel"><span class="picto" aria-hidden="true">✨</span> La nuit qui vient</button>
+        <button type="button" data-question="Quelle est la phase de la Lune ?"><span class="picto" aria-hidden="true">🌙</span> La Lune</button>
+        <button type="button" data-question="Prochaines étoiles filantes ?"><span class="picto" aria-hidden="true">☄️</span> Étoiles filantes</button>
+        <button type="button" data-question="Où est l’étoile Polaire ?"><span class="picto" aria-hidden="true">🧭</span> Trouver le nord</button>
+      </div>
+      <form id="chat-form">
+        <label for="message">Votre message (280 caractères maximum)</label>
+        <span id="compteur" aria-hidden="true">0 / 280</span>
+        <textarea id="message" name="message" rows="2" maxlength="280" required placeholder="Où est l’étoile Polaire ?"></textarea>
+        <button type="submit">Envoyer</button>
+      </form>
+      <div class="barre">
+        <p id="status" role="status"></p>
+        <div class="outils">
+          <button type="button" id="effacer">Effacer la conversation</button>
+          <button type="button" id="exporter">Exporter le journal</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Serveur local fourni pour l’atelier. <span id="version">version…</span> · Phases calculées à un jour près.</p>
+  </footer>
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
